@@ -1,9 +1,11 @@
+package lzw;
+
 public class Encoder {
-    Dictionary dictionary = new Dictionary();
+    private Dictionary dictionary = new Dictionary();
 
 
     /**
-     * encodes the given input via lzw compression
+     * encodes the given input via lzw compression.
      * @param input the given input String
      * @return the encoded String containing decimal integers divided by a space
      */
@@ -18,16 +20,16 @@ public class Encoder {
         StringBuilder prefix = new StringBuilder();
         char current;
 
-        for (int i = 0; i < input.length() ; i++) {
+        for (int i = 0; i < input.length(); i++) {
             StringBuilder prefixPlusCurrent = new StringBuilder();
             current = input.charAt(i);
             prefixPlusCurrent.append(prefix).append(current);
             if (!(dictionary.isInDictionary(prefixPlusCurrent.toString()))) { // if prefix+current is not in the dictionary...
-                if (dictionary.entries.size() > 65534) {
-                    throw new IllegalStateException("Dictionary too big");
+                if (dictionary.getEntries().size() > 65534) {
+                    throw new IllegalStateException("lzw.Dictionary too big");
                 }
               dictionary.add(prefixPlusCurrent.toString()); // ... it will be added
-              output.append(dictionary.entries.indexOf(prefix.toString())).append(" "); // ... the dictionary entry resembled by
+              output.append(dictionary.getEntries().indexOf(prefix.toString())).append(" "); // ... the dictionary entry resembled by
                                                                                         // prefix is appended to the output
               prefix.setLength(0); // (re)set prefix
               prefix.append(current);
@@ -37,7 +39,7 @@ public class Encoder {
             }
 
         }
-        output.append(dictionary.entries.indexOf(prefix.toString()));
+        output.append(dictionary.getEntries().indexOf(prefix.toString()));
         return output.toString();
     }
 
@@ -62,10 +64,11 @@ public class Encoder {
     }
 
     /**
-     * 'main' method of Encoder class
+     * 'main' method of lzw.Encoder class.
+     * @param input the input String
      * @return the final encoded String consisting of 16bit binary numbers
      */
-    public String action(String input){
+    public String action(String input) {
         String outputInDec = encode(input);
         return convertOutputStringToBinary(outputInDec);
     }
